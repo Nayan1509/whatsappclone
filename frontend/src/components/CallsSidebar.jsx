@@ -1,31 +1,38 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useChat } from "../contexts/ChatContext";
 import { FiSearch } from "react-icons/fi";
 import clsx from "clsx";
 
 const CallsSidebar = ({ onSelectCall }) => {
   const { selectedCall, setSelectedCall } = useChat();
+  const [loading, setLoading] = useState(true);
 
-  const [calls] = useState([
-    {
-      id: 1,
-      name: "Ravi Kumar",
-      wa_id: "919937320320",
-      type: "video",
-      status: "Completed",
-      time: Date.now() - 3600 * 1000,
-    },
-    {
-      id: 2,
-      name: "Neha Joshi",
-      wa_id: "919876543210",
-      type: "audio",
-      status: "Missed",
-      time: Date.now() - 7200 * 1000,
-    },
-  ]);
-
+  const [calls, setCalls] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    setTimeout(() => {
+      setCalls([
+        {
+          id: 1,
+          name: "Ravi Kumar",
+          wa_id: "919937320320",
+          type: "video",
+          status: "Completed",
+          time: Date.now() - 3600 * 1000,
+        },
+        {
+          id: 2,
+          name: "Neha Joshi",
+          wa_id: "919876543210",
+          type: "audio",
+          status: "Missed",
+          time: Date.now() - 7200 * 1000,
+        },
+      ]);
+      setLoading(false);
+    }, 1500); 
+  }, []);
 
   const filtered = calls.filter((c) =>
     (c.name || c.wa_id).toLowerCase().includes(searchTerm.toLowerCase())
@@ -59,43 +66,60 @@ const CallsSidebar = ({ onSelectCall }) => {
 
       {/* Calls List */}
       <div className="flex-1 overflow-y-auto p-4">
-        {filtered.map((call) => (
-          <div
-            key={call.id}
-            onClick={() => handleClick(call)}
-            className={clsx(
-              "flex items-center rounded-lg justify-between mb-2 px-4 py-3 cursor-pointer transition-all",
-              selectedCall?.id === call.id
-                ? "bg-[#e9edef]"
-                : "hover:bg-gray-100"
-            )}
-          >
-            {/* Left: Avatar + Name */}
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-white font-semibold text-sm">
-                {call.name?.[0] || call.wa_id?.[0]}
+        {loading
+          ? 
+            Array.from({ length: 5 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="flex items-center justify-between mb-3 animate-pulse"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 bg-gray-300 rounded-full" />
+                  <div className="flex flex-col gap-2">
+                    <div className="h-3 bg-gray-300 rounded w-24" />
+                    <div className="h-2 bg-gray-200 rounded w-32" />
+                  </div>
+                </div>
+                <div className="h-2 bg-gray-200 rounded w-10" />
               </div>
+            ))
+          : filtered.map((call) => (
+              <div
+                key={call.id}
+                onClick={() => handleClick(call)}
+                className={clsx(
+                  "flex items-center rounded-lg justify-between mb-2 px-4 py-3 cursor-pointer transition-all",
+                  selectedCall?.id === call.id
+                    ? "bg-[#e9edef]"
+                    : "hover:bg-gray-100"
+                )}
+              >
+                {/* Left: Avatar + Name */}
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-white font-semibold text-sm">
+                    {call.name?.[0] || call.wa_id?.[0]}
+                  </div>
 
-              <div className="flex flex-col">
-                <h2 className="font-semibold text-sm text-gray-900">
-                  {call.name || call.wa_id}
-                </h2>
-                <p className="text-xs text-gray-600 truncate w-20 sm:w-40">
-                  {call.type === "video" ? "Video Call" : "Audio Call"} •{" "}
-                  {call.status}
-                </p>
+                  <div className="flex flex-col">
+                    <h2 className="font-semibold text-sm text-gray-900">
+                      {call.name || call.wa_id}
+                    </h2>
+                    <p className="text-xs text-gray-600 truncate w-20 sm:w-40">
+                      {call.type === "video" ? "Video Call" : "Audio Call"} •{" "}
+                      {call.status}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Right: Timestamp */}
+                <div className="text-xs text-gray-500 whitespace-nowrap">
+                  {new Date(call.time).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </div>
               </div>
-            </div>
-
-            {/* Right: Timestamp */}
-            <div className="text-xs text-gray-500 whitespace-nowrap">
-              {new Date(call.time).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </div>
-          </div>
-        ))}
+            ))}
       </div>
     </div>
   );
