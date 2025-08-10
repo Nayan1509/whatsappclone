@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { sendMessage } from "../services/api";
 import { useChat } from "../contexts/ChatContext";
+import { LuSendHorizontal } from "react-icons/lu";
 
 const MessageInput = ({ onSend }) => {
   const [text, setText] = useState("");
@@ -21,20 +22,20 @@ const MessageInput = ({ onSend }) => {
   };
 
   return (
-    <div className="flex p-3 border-t bg-white">
+    <div className="flex p-3 bg-white">
       <input
         type="text"
-        className="flex-1 border rounded px-3 py-2 mr-2 text-sm"
+        className="flex-1 rounded px-3 py-2 mr-2 text-sm"
         value={text}
         placeholder="Type a message"
         onChange={(e) => setText(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleSend()}
       />
       <button
-        className="bg-green-500 text-white px-4 py-2 rounded text-sm"
+        className="bg-transparent cursor-pointer px-4 py-2 rounded text-md"
         onClick={handleSend}
       >
-        Send
+        <LuSendHorizontal />
       </button>
     </div>
   );
