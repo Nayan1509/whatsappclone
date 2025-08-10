@@ -5,20 +5,22 @@ import MessageBubble from "./MessageBubble";
 import MessageInput from "./MessageInput";
 import { FaVideo, FaPhone } from "react-icons/fa";
 import { HiUserCircle } from "react-icons/hi2";
-import bgImage from "../assets/chatbg.jpg"; 
+import { IoArrowBack } from "react-icons/io5";
+import bgImage from "../assets/chatbg.jpg";
 
-const ChatWindow = () => {
+const ChatWindow = ({ chat, onBack }) => {
   const { selectedUser } = useChat();
+  const activeUser = chat || selectedUser;
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    if (selectedUser)
-      fetchMessagesByUser(selectedUser.wa_id).then(({ data }) =>
+    if (activeUser)
+      fetchMessagesByUser(activeUser.wa_id).then(({ data }) =>
         setMessages(data)
       );
-  }, [selectedUser]);
+  }, [activeUser]);
 
-  if (!selectedUser) {
+  if (!activeUser) {
     return (
       <div className="flex-1 flex items-center justify-center">
         Select a chat to see messages.
@@ -27,16 +29,25 @@ const ChatWindow = () => {
   }
 
   return (
-    <div className="flex flex-col flex-1">
+    <div className="flex flex-col flex-1 w-full">
       {/* Header */}
       <div className="p-4 bg-white flex items-center justify-between">
         <div className="flex items-center gap-2">
+          {/* Mobile back button */}
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="mr-2 text-gray-600 hover:text-gray-900"
+            >
+              <IoArrowBack className="text-2xl" />
+            </button>
+          )}
           <HiUserCircle className="text-3xl text-gray-500" />
           <div>
             <h2 className="font-semibold text-sm md:text-base">
-              {selectedUser.name}
+              {activeUser.name}
             </h2>
-            <p className="text-xs text-gray-500">{selectedUser.wa_id}</p>
+            <p className="text-xs text-gray-500">{activeUser.wa_id}</p>
           </div>
         </div>
 

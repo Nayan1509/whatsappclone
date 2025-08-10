@@ -3,10 +3,9 @@ import { useChat } from "../contexts/ChatContext";
 import { FiSearch } from "react-icons/fi";
 import clsx from "clsx";
 
-const CallsSidebar = () => {
+const CallsSidebar = ({ onSelectCall }) => {
   const { selectedCall, setSelectedCall } = useChat();
 
-  // Static dummy data for now
   const [calls] = useState([
     {
       id: 1,
@@ -14,7 +13,7 @@ const CallsSidebar = () => {
       wa_id: "919937320320",
       type: "video",
       status: "Completed",
-      time: Date.now() - 3600 * 1000, 
+      time: Date.now() - 3600 * 1000,
     },
     {
       id: 2,
@@ -32,8 +31,13 @@ const CallsSidebar = () => {
     (c.name || c.wa_id).toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleClick = (call) => {
+    setSelectedCall(call); // desktop
+    if (onSelectCall) onSelectCall(call); // mobile
+  };
+
   return (
-    <div className="shadow-md bg-white flex flex-col">
+    <div className="shadow-xl bg-white flex flex-col w-full md:w-auto">
       {/* Header */}
       <div className="p-4">
         <h1 className="text-xl font-bold text-gray-800">Calls</h1>
@@ -58,7 +62,7 @@ const CallsSidebar = () => {
         {filtered.map((call) => (
           <div
             key={call.id}
-            onClick={() => setSelectedCall(call)}
+            onClick={() => handleClick(call)}
             className={clsx(
               "flex items-center rounded-lg justify-between mb-2 px-4 py-3 cursor-pointer transition-all",
               selectedCall?.id === call.id
@@ -76,7 +80,7 @@ const CallsSidebar = () => {
                 <h2 className="font-semibold text-sm text-gray-900">
                   {call.name || call.wa_id}
                 </h2>
-                <p className="text-xs text-gray-600 truncate w-40">
+                <p className="text-xs text-gray-600 truncate w-20 sm:w-40">
                   {call.type === "video" ? "Video Call" : "Audio Call"} •{" "}
                   {call.status}
                 </p>

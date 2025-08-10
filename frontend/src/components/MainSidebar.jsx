@@ -5,8 +5,8 @@ import {
   FaUser,
 } from "react-icons/fa6";
 import { FaPhoneAlt, FaCog } from "react-icons/fa";
-import { PiDotFill } from "react-icons/pi";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { AiOutlineHistory } from "react-icons/ai";
 import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 const menuItems = [
   { icon: <FaRegComments />, label: "Chats", to: "/" },
   { icon: <FaPhoneAlt />, label: "Calls", to: "/calls" },
-  { icon: <PiDotFill className="text-green-600" />, label: "Status" },
+  { icon: <AiOutlineHistory />, label: "Status" },
   { icon: <FaRegStar />, label: "Starred messages" },
   { icon: <FaBoxArchive />, label: "Archived chats" },
 ];
