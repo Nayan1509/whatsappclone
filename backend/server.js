@@ -6,8 +6,14 @@ const connectDB = require("./config/db");
 dotenv.config();
 connectDB();
 
+const corsOptions = {
+  origin: process.env.CLIENT_ORIGIN, // "https://whatsappclone-sooty.vercel.app"
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+};
+
 const app = express();
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes
